@@ -1,25 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useState } from 'react';
+import { fetchUser } from './userService'
+import { Button, CircularProgress, Typography } from '@mui/material';
 
 function App() {
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false)
+
+  const getUsers = async () => {
+    setLoading('true');
+    const userData = await fetchUser(setLoading);
+    setMessage(userData.message);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Typography variant='h1'>DOGS!!!</Typography>
+      <div>
+        <img src={message} alt="Dog" height={700}/>
+        <br/>
+        <Button 
+          variant='contained' 
+          onClick={getUsers}
         >
-          Learn React
-        </a>
-      </header>
+          {loading ? <CircularProgress color='error' /> : 'GIMME MORE DOGS'}
+        </Button>
+      </div>
     </div>
-  );
+  )
 }
 
 export default App;
